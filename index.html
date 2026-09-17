@@ -1,0 +1,992 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<style>:root{color-scheme:light dark}body{margin:0}[hidden]{display:none!important}</style>
+</head>
+<body>
+<title>Траектория креатора</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;800&family=Roboto+Condensed:wght@400;700&display=swap">
+
+<style>
+/* ============================================================
+   Дизайн-система Compass College
+   Палитра и шрифты — Brand Book 2021, с. 9. Форма — с. 10 (паттерн, линовка).
+   Акцентный текст #5C6600 выведен под порог WCAG AA: #ACB948 на белом даёт 2.15:1.
+   ============================================================ */
+:root {
+  --bg: #FFFFFF;
+  --canvas: #F4F3F0;
+  --surface: #FFFFFF;
+  --surface-2: #E5E4DF;
+  --ink: #000000;
+  --ink-2: #33342F;
+  --muted: #5F605A;
+  --line: rgba(0,0,0,.16);
+  --line-soft: rgba(0,0,0,.09);
+
+  --done: #ACB948;          /* фисташковая заливка — пройдено */
+  --done-ink: #000000;      /* чёрный поверх фисташки — 9.79:1 */
+  --done-soft: #E5E4DF;
+  --now: #ACB948;           /* «идёт сейчас» — контур, не заливка */
+  --now-soft: transparent;
+  --next-ink: #5F605A;
+  --next-bd: rgba(0,0,0,.42);
+
+  --accent-text: #5C6600;   /* 6.26:1 на белом, 4.92:1 на ivory */
+  --edge-hot: #ACB948;
+  --e-req: rgba(0,0,0,.42);
+  --e-sup: rgba(0,0,0,.18);
+  --link: #5C6600;
+  --warn: #5C6600;
+  --warn-soft: #E5E4DF;
+
+  --shadow: none;
+  --shadow-sm: none;
+  --focus: #5C6600;
+
+  --radius: 0;
+  --font-ui: "TT Norms", "Figtree", "Segoe UI", system-ui, sans-serif;
+  --font-data: "Roboto Condensed", "Arial Narrow", Helvetica, Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0E0E0E;
+    --canvas: #141414;
+    --surface: #141414;
+    --surface-2: #1C1C1B;
+    --ink: #F2F2EF;
+    --ink-2: #C9CAC4;
+    --muted: #9A9B95;
+    --line: rgba(255,255,255,.16);
+    --line-soft: rgba(255,255,255,.09);
+
+    --done: #ACB948;
+    --done-ink: #000000;
+    --done-soft: #24280F;
+    --now: #ACB948;
+    --now-soft: transparent;
+    --next-ink: #9A9B95;
+    --next-bd: rgba(255,255,255,.44);
+
+    --accent-text: #ACB948;   /* 8.59:1 на #141414 */
+    --edge-hot: #ACB948;
+    --e-req: rgba(255,255,255,.44);
+    --e-sup: rgba(255,255,255,.18);
+    --link: #ACB948;
+    --warn: #ACB948;
+    --warn-soft: #1C1C1B;
+    --focus: #ACB948;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0E0E0E;
+  --canvas: #141414;
+  --surface: #141414;
+  --surface-2: #1C1C1B;
+  --ink: #F2F2EF;
+  --ink-2: #C9CAC4;
+  --muted: #9A9B95;
+  --line: rgba(255,255,255,.16);
+  --line-soft: rgba(255,255,255,.09);
+  --done: #ACB948;
+  --done-ink: #000000;
+  --done-soft: #24280F;
+  --now: #ACB948;
+  --now-soft: transparent;
+  --next-ink: #9A9B95;
+  --next-bd: rgba(255,255,255,.44);
+  --accent-text: #ACB948;
+  --edge-hot: #ACB948;
+  --e-req: rgba(255,255,255,.44);
+  --e-sup: rgba(255,255,255,.18);
+  --link: #ACB948;
+  --warn: #ACB948;
+  --warn-soft: #1C1C1B;
+  --focus: #ACB948;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-ui);
+  font-size: 14px;
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+}
+button { font: inherit; color: inherit; }
+
+.shell { height: 100vh; min-height: 520px; display: flex; flex-direction: column; }
+
+/* ---------- верхняя панель ---------- */
+.bar {
+  display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
+  padding: 12px 22px; background: var(--surface); border-bottom: 1px solid var(--next-bd);
+}
+.brand { display: flex; align-items: baseline; gap: 10px; margin-right: 4px; }
+.brand b { font-weight: 800; font-size: 15px; letter-spacing: -.015em; }
+.brand span { font-family: var(--font-data); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+
+.seg { display: inline-flex; border: 1px solid var(--next-bd); border-radius: var(--radius); }
+.seg button {
+  border: 0; background: transparent; padding: 7px 16px; border-radius: var(--radius);
+  font-family: var(--font-data); font-weight: 700; font-size: 12px; letter-spacing: .07em;
+  text-transform: uppercase; color: var(--muted); cursor: pointer;
+}
+.seg button + button { border-left: 1px solid var(--line); }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+.seg button:focus-visible { outline: 2px solid var(--focus); outline-offset: 1px; }
+
+.stats { display: flex; gap: 22px; margin-left: auto; align-items: center; }
+.stats[hidden] { display: none; }
+.stat { display: flex; flex-direction: column; line-height: 1.2; }
+.stat b { font-family: var(--font-data); font-weight: 700; font-size: 16px; font-variant-numeric: tabular-nums; }
+.stat span { font-family: var(--font-data); font-size: 10.5px; color: var(--muted); letter-spacing: .1em; }
+.who { display: flex; align-items: center; gap: 9px; padding-left: 20px; border-left: 1px solid var(--line); }
+.ava {
+  width: 32px; height: 32px; border-radius: var(--radius);
+  background: var(--done); color: var(--done-ink);
+  display: grid; place-items: center; font-family: var(--font-data); font-weight: 700; font-size: 12px;
+}
+.who div { line-height: 1.25; }
+.who small { display: block; color: var(--muted); font-size: 11px; }
+
+/* ---------- панель фильтров ---------- */
+.subbar {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  padding: 9px 22px; background: var(--surface-2);
+  border-bottom: 1px solid var(--line); font-size: 12px;
+}
+.subbar > .lbl { font-family: var(--font-data); color: var(--muted); font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; font-weight: 700; }
+.tfilter { display: flex; gap: 6px; flex-wrap: wrap; }
+.tf {
+  display: inline-flex; align-items: center; gap: 7px;
+  border: 1px solid var(--next-bd); background: var(--surface);
+  border-radius: var(--radius); padding: 5px 11px; cursor: pointer; color: var(--ink-2);
+  font-size: 12px;
+}
+.tf i { font-style: normal; width: 20px; height: 0; border-top-width: 2px; border-top-style: solid; flex: none; }
+.tf i.all { border-color: var(--muted); }
+.tf i.req { border-color: var(--e-req); border-top-width: 2.4px; }
+.tf i.sup { border-color: var(--e-req); border-top-style: dashed; }
+.tf b { font-family: var(--font-data); font-size: 11.5px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.tf[aria-pressed="true"] { border-color: var(--ink); background: var(--ink); color: var(--bg); }
+.tf[aria-pressed="true"] b { color: var(--bg); }
+.tf[aria-pressed="true"] i { border-color: var(--bg); }
+.tf:focus-visible { outline: 2px solid var(--focus); outline-offset: 1px; }
+.subnote { font-family: var(--font-data); color: var(--muted); font-size: 12px; margin-left: auto; }
+.subnote b { color: var(--ink); font-weight: 700; }
+
+/* ---------- холст: линовка вместо точечной сетки ---------- */
+.main { display: flex; flex: 1; min-height: 0; }
+.canvas-wrap {
+  flex: 1; overflow: auto;
+  background:
+    repeating-linear-gradient(to bottom, var(--line-soft) 0 1px, transparent 1px 30px),
+    var(--canvas);
+}
+.canvas { position: relative; }
+.canvas svg { position: absolute; inset: 0; overflow: visible; }
+
+.colhead {
+  position: absolute; font-family: var(--font-data); font-size: 10.5px; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--muted); font-weight: 700;
+  display: flex; align-items: center; gap: 8px;
+}
+.colhead i { font-style: normal; color: var(--done-ink); background: var(--done); padding: 1px 5px; }
+.bandlabel {
+  position: absolute; font-family: var(--font-data); font-size: 10.5px; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--muted); font-weight: 700; padding: 3px 9px;
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+}
+
+/* ---------- узлы: квадратная ячейка, нулевое скругление ---------- */
+.node {
+  position: absolute; display: flex; align-items: center; gap: 8px;
+  padding: 0 10px; border-radius: var(--radius); border: 1.5px solid var(--next-bd);
+  background: var(--surface); text-align: left; cursor: pointer;
+  transition: opacity .13s ease, border-color .13s ease;
+  overflow: hidden;
+}
+.node .txt { min-width: 0; flex: 1; display: flex; flex-direction: column; gap: 1px; }
+.node .nm { font-size: 12px; font-weight: 500; line-height: 1.2; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; }
+.node .sc { margin-left: auto; font-family: var(--font-data); font-size: 12.5px; font-weight: 700; font-variant-numeric: tabular-nums; flex: none; }
+
+/* пройдено — сплошная фисташковая заливка, чёрный текст */
+.node.done { background: var(--done); border-color: var(--done); color: var(--done-ink); }
+.node.done .sc { color: rgba(0,0,0,.72); }
+/* идёт сейчас — фисташковый контур и подчёркивание, без заливки */
+.node.now { background: transparent; border-color: var(--now); border-width: 2.5px; }
+.node.now .sc { color: var(--accent-text); }
+/* предстоит — ровный контур, приглушённый текст */
+.node.next { background: transparent; border: 1.5px solid var(--next-bd); color: var(--next-ink); }
+.node.diploma { border-radius: var(--radius); }
+.node.diploma.next { border-width: 3px; border-color: var(--ink); color: var(--ink); }
+.node.plain { background: var(--surface); border-color: var(--next-bd); color: var(--ink); }
+.node.own { background: var(--done); border-color: var(--done); color: var(--done-ink); }
+.node .tag { font-family: var(--font-data); font-size: 9.5px; text-transform: uppercase; letter-spacing: .08em; color: var(--done-ink); font-weight: 700; flex: none; opacity: .68; }
+.node .flag { position: absolute; top: 0; right: 0; width: 0; height: 0; border-style: solid; border-width: 0 9px 9px 0; border-color: transparent var(--ink) transparent transparent; }
+
+.node:hover, .node:focus { border-color: var(--ink); }
+.node:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.node.sel { border-color: var(--ink); border-width: 3px; }
+.canvas.filtered .node { opacity: .2; }
+.canvas.filtered .node.hot { opacity: 1; }
+
+/* ---------- рёбра: линовка ---------- */
+path.edge { fill: none; stroke: var(--e-sup); stroke-width: 1; }
+path.edge.req { stroke: var(--e-req); stroke-width: 1.4; }
+path.edge.sup { stroke: var(--e-req); stroke-width: 1; stroke-dasharray: 5 4; opacity: .6; }
+path.edge.passed { stroke: var(--done); stroke-width: 2; opacity: 1; }
+path.edge.off { display: none; }
+.canvas.filtered path.edge { opacity: .08; }
+.canvas.filtered path.edge.hot { opacity: 1; stroke: var(--edge-hot); stroke-width: 2; }
+
+/* ---------- боковая панель ---------- */
+.side {
+  width: 372px; flex: none; background: var(--surface);
+  border-left: 1px solid var(--next-bd); overflow-y: auto; padding: 20px;
+  display: flex; flex-direction: column; gap: 18px;
+}
+.card { border: 1px solid var(--line); border-radius: var(--radius); padding: 15px; background: var(--surface-2); }
+.card.warn { border-left: 3px solid var(--done); background: var(--warn-soft); }
+.eyebrow { font-family: var(--font-data); font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); font-weight: 700; margin: 0 0 8px; }
+.title { font-size: 19px; font-weight: 600; margin: 0 0 4px; text-wrap: balance; line-height: 1.22; letter-spacing: -.01em; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0 0; }
+.chip { font-family: var(--font-data); font-size: 11px; padding: 3px 9px; border-radius: var(--radius); border: 1px solid var(--line); color: var(--ink-2); background: var(--surface); }
+.chip.done { background: var(--done); border-color: var(--done); color: var(--done-ink); font-weight: 700; }
+.chip.now { border-color: var(--done); border-width: 1.5px; color: var(--accent-text); font-weight: 700; }
+.chip.next { color: var(--muted); }
+
+.score { display: flex; align-items: flex-end; gap: 12px; }
+.score b { font-family: var(--font-data); font-size: 38px; font-weight: 700; line-height: .92; font-variant-numeric: tabular-nums; }
+.score .grade { font-family: var(--font-data); font-size: 14px; font-weight: 700; letter-spacing: .04em; padding: 3px 10px; border-radius: var(--radius); background: var(--done); color: var(--done-ink); }
+.meter { height: 6px; border-radius: var(--radius); background: var(--line); overflow: hidden; margin-top: 10px; }
+.meter i { display: block; height: 100%; background: var(--done); }
+
+dl.kv { margin: 0; display: grid; grid-template-columns: 96px 1fr; gap: 7px 12px; }
+dl.kv dt { font-family: var(--font-data); color: var(--muted); font-size: 12px; }
+dl.kv dd { margin: 0; font-size: 12.5px; }
+.side p { margin: 0; font-size: 12.5px; color: var(--ink-2); }
+.side h4 { margin: 0 0 8px; font-family: var(--font-data); font-size: 11px; letter-spacing: .11em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
+.side h4 span { color: var(--accent-text); margin-left: 4px; }
+ul.rel { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+ul.rel button {
+  width: 100%; text-align: left; cursor: pointer;
+  border: 1px solid var(--line); background: var(--surface);
+  border-radius: var(--radius); padding: 8px 10px; font-size: 12px;
+  display: flex; align-items: flex-start; gap: 8px;
+}
+ul.rel button:hover { border-color: var(--ink); }
+ul.rel button:focus-visible { outline: 2px solid var(--focus); outline-offset: 1px; }
+ul.rel .dot { width: 8px; height: 8px; border-radius: var(--radius); flex: none; margin-top: 4px; }
+ul.rel .dot.done { background: var(--done); }
+ul.rel .dot.now { background: transparent; box-shadow: inset 0 0 0 2px var(--done); }
+ul.rel .dot.next { background: transparent; box-shadow: inset 0 0 0 1.5px var(--next-bd); }
+.rl { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.rn { font-weight: 500; line-height: 1.25; }
+.rf { font-size: 11px; color: var(--muted); line-height: 1.4; }
+.ty { font-style: normal; font-family: var(--font-data); font-size: 9.5px; text-transform: uppercase; letter-spacing: .08em; font-weight: 700; padding: 2px 6px; border-radius: var(--radius); margin-left: 5px; vertical-align: 1.5px; white-space: nowrap; }
+.ty.req { background: var(--done); color: var(--done-ink); }
+.ty.sup { background: transparent; border: 1px solid var(--line); color: var(--muted); }
+ul.fmt { margin: 0; padding-left: 17px; font-size: 12.5px; color: var(--ink-2); }
+ul.fmt li { margin-bottom: 3px; }
+ul.fmt li::marker { color: var(--done); }
+a.syl { color: var(--accent-text); font-size: 12.5px; font-weight: 600; text-decoration: none; border-bottom: 1.5px solid var(--done); }
+a.syl:hover { border-bottom-color: var(--accent-text); }
+
+.legend { display: flex; flex-direction: column; gap: 8px; }
+.lg { display: flex; align-items: center; gap: 9px; font-size: 12px; color: var(--ink-2); }
+.sw { width: 26px; height: 16px; border-radius: var(--radius); flex: none; }
+.sw.done { background: var(--done); border: 1.5px solid var(--done); }
+.sw.now { background: transparent; border: 2.5px solid var(--now); }
+.sw.next { background: transparent; border: 1.5px solid var(--next-bd); }
+.ln { width: 26px; height: 0; flex: none; border-top-width: 2px; border-top-style: solid; }
+.ln.req { border-color: var(--e-req); border-top-width: 2.4px; }
+.ln.sup { border-color: var(--e-req); border-top-style: dashed; }
+.ln.passed { border-color: var(--done); border-top-width: 2.5px; }
+
+.method { font-size: 12px; color: var(--ink-2); }
+.method dt { font-weight: 600; margin-top: 8px; }
+.method dd { margin: 0; color: var(--muted); font-size: 11.5px; }
+.method dl { margin: 0; }
+.rule { font-size: 12px; color: var(--ink-2); border-left: 3px solid var(--done); padding-left: 10px; margin: 0 0 10px; }
+
+.demo { font-size: 11.5px; color: var(--muted); line-height: 1.5; border-top: 1px solid var(--line); padding-top: 14px; margin-top: auto; }
+.demo b { color: var(--ink-2); }
+.close { border: 1px solid var(--line); background: var(--surface); cursor: pointer; border-radius: var(--radius); padding: 4px 10px; font-family: var(--font-data); font-size: 11.5px; color: var(--muted); }
+.close:hover { color: var(--ink); border-color: var(--ink); }
+.head-row { display: flex; align-items: flex-start; gap: 10px; }
+.head-row .title { flex: 1; }
+
+.hint { font-size: 12.5px; color: var(--muted); }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+@media (max-width: 1180px) { .side { width: 320px; } .subnote { display: none; } }
+</style>
+
+<div class="shell">
+  <header class="bar">
+    <div class="brand">
+      <b>Траектория</b>
+      <span>Compass College</span>
+    </div>
+
+    <div class="seg" role="group" aria-label="Чей вид показан">
+      <button id="vCreator" aria-pressed="true">Креатор</button>
+      <button id="vTeacher" aria-pressed="false">Преподаватель</button>
+    </div>
+
+    <div class="stats" id="statsCreator">
+      <div class="stat"><b id="sDone">—</b><span>ПРОЙДЕНО</span></div>
+      <div class="stat"><b id="sNow">—</b><span>В ПРОЦЕССЕ</span></div>
+      <div class="stat"><b id="sAvg">—</b><span>СРЕДНИЙ БАЛЛ</span></div>
+      <div class="who">
+        <div class="ava">АК</div>
+        <div>
+          Айдана К.
+          <small>2 курс · Визуальные медиа: Анимация</small>
+        </div>
+      </div>
+    </div>
+
+    <div class="stats" id="statsTeacher" hidden>
+      <div class="stat"><b id="tDisc">—</b><span>ДИСЦИПЛИН</span></div>
+      <div class="stat"><b id="tEdges">—</b><span>СВЯЗЕЙ</span></div>
+      <div class="stat"><b id="tOwn">—</b><span>ВЕДЁТ К</span></div>
+      <div class="who">
+        <div class="ava">АМ</div>
+        <div>
+          А. Маркилов
+          <small>Математика · общеобразовательный департамент</small>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="subbar">
+    <span class="lbl">Связи</span>
+    <div class="tfilter" role="group" aria-label="Фильтр по типу связи">
+      <button class="tf" data-t="all" aria-pressed="true"><i class="all"></i>Все <b id="cAll">—</b></button>
+      <button class="tf" data-t="req" aria-pressed="false"><i class="req"></i>Пререквизит <b id="cReq">—</b></button>
+      <button class="tf" data-t="sup" aria-pressed="false"><i class="sup"></i>Опора <b id="cSup">—</b></button>
+    </div>
+    <span class="subnote" id="subnote"></span>
+  </div>
+
+  <div class="main">
+    <div class="canvas-wrap" id="wrap">
+      <div class="canvas" id="canvas">
+        <svg id="edges" aria-hidden="true"></svg>
+      </div>
+    </div>
+    <aside class="side" id="side"></aside>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   ДАННЫЕ
+   ============================================================ */
+
+const GRADE = s =>
+  s >= 95 ? "A"  : s >= 92 ? "A-" : s >= 89 ? "B+" : s >= 85 ? "B" :
+  s >= 82 ? "B-" : s >= 79 ? "C+" : s >= 75 ? "C"  : s >= 72 ? "C-" :
+  s >= 69 ? "D+" : s >= 65 ? "D"  : s >= 60 ? "D-" : "F";
+
+const TRAD = s =>
+  s >= 92 ? "Отлично" : s >= 82 ? "Хорошо" :
+  s >= 60 ? "Удовлетворительно" : "Неудовлетворительно";
+
+/* Дисциплины. b: 0 — общеобразовательный цикл, 1 — профессиональный.
+   y: 0 — 1 курс, 1 — 2 курс, 2 — 3 курс, 3 — диплом.
+   Двухгодичные дисциплины разбиты на две части — по одной на курс. */
+const D = [
+  // 1 курс — общеобразовательный цикл
+  {id:"kyr", n:"Кыргызский язык", y:0, b:0, st:"done", sc:86, t:"А. Осмонова", cr:4, ab:"Язык, стиль и работа с текстом: основа сценарной записи и питчинга."},
+  {id:"eng", n:"Английский язык", y:0, b:0, st:"done", sc:91, t:"Дж. Райт", cr:6, ab:"Профессиональный английский: терминология индустрии и интерфейсы софта."},
+  {id:"mat", n:"Математика", y:0, b:0, st:"done", sc:84, t:"А. Маркилов", cr:5, ab:"Функции, векторы, кривые и статистика — язык, на котором описывается движение."},
+  {id:"phy", n:"Физика", y:0, b:0, st:"done", sc:78, t:"Э. Садыков", cr:4, ab:"Механика движения и оптика: почему предметы падают так, а свет ведёт себя эдак."},
+  {id:"his", n:"История", y:0, b:0, st:"done", sc:88, t:"Н. Абдырахманова", cr:3, ab:"Исторический контекст, без которого не читается ни один визуальный язык."},
+  {id:"geo", n:"География", y:0, b:0, st:"done", sc:82, t:"М. Турсунова", cr:3, ab:"Ландшафты, климат и логистика съёмочных локаций."},
+  {id:"chm", n:"Химия", y:0, b:0, st:"done", sc:75, t:"С. Бакиров", cr:3, ab:"Светочувствительность, пигменты и материалы — от плёнки до красок."},
+
+  // 1 курс — профессиональный цикл
+  {id:"draw",  n:"Рисунок", y:0, b:1, st:"done", sc:90, t:"К. Джумабаев", cr:6, ab:"Постановка руки, конструкция, объём. База для всего визуального цикла."},
+  {id:"digi",  n:"Цифровой рисунок", y:0, b:1, st:"done", sc:87, t:"К. Джумабаев", cr:5, ab:"Планшет, слои, цифровая кисть: перенос навыка рисунка в графический редактор."},
+  {id:"hart",  n:"История изобразительных искусств", y:0, b:1, st:"done", sc:83, t:"Н. Абдырахманова", cr:3, ab:"Как менялся визуальный язык от наскальной живописи до модернизма."},
+  {id:"think", n:"Мастерство мышления", y:0, b:1, st:"done", sc:92, t:"Р. Исаев", cr:4, ab:"Работа с идеей: как придумывать, отбирать и защищать замысел."},
+  {id:"paint", n:"Живопись", y:0, b:1, st:"done", sc:85, t:"Г. Мамытова", cr:5, ab:"Цвет, тон, свет. Колористика, на которую позже опирается цветокоррекция."},
+  {id:"hfash", n:"История ИЗО (моды и дизайна)", y:0, b:1, st:"done", sc:80, t:"Н. Абдырахманова", cr:3, ab:"Костюм, предметная среда и стиль эпохи как инструмент художника."},
+  {id:"intro", n:"Введение в профессию", y:0, b:1, st:"done", sc:94, t:"Р. Исаев", cr:2, ab:"Как устроена индустрия: роли, департаменты, этапы производства."},
+  {id:"anim",  n:"Основа анимации", y:0, b:1, st:"done", sc:89, t:"Б. Асанов", cr:6, ab:"12 принципов анимации, тайминг и спейсинг, первые одушевлённые сцены."},
+  {id:"photo0",n:"Введение в фотографию", y:0, b:1, st:"done", sc:81, t:"Т. Ким", cr:4, ab:"Камера, экспозиция, свет. Первый контакт с оптикой."},
+  {id:"speech",n:"Речь и пластика", y:0, b:1, st:"done", sc:77, t:"Э. Токтогулова", cr:3, ab:"Голос, дыхание, движение — для работы с актёром и озвучанием."},
+
+  // 2 курс
+  {id:"act",   n:"Актерское мастерство", y:1, b:1, st:"done", sc:88, t:"Э. Токтогулова", cr:5, ab:"Действие, задача, конфликт — изнутри актёрской профессии."},
+  {id:"vs1",   n:"Визуальный сторителлинг: основы повествования", y:1, b:1, st:"done", sc:91, t:"Р. Исаев", cr:5, ab:"Структура истории, арка героя, драматургия сцены."},
+  {id:"photo", n:"Фотография", y:1, b:1, st:"done", sc:86, t:"Т. Ким", cr:5, ab:"Композиция кадра, работа со светом, серия как высказывание."},
+  {id:"smm",   n:"SMM", y:1, b:1, st:"done", sc:93, t:"А. Ниязова", cr:3, ab:"Продвижение проекта: площадки, форматы, аналитика охватов."},
+  {id:"cam",   n:"Операторское искусство", y:1, b:1, st:"now", t:"Т. Ким", cr:6, ab:"Оптика, движение камеры, экспозиция и световая схема.",
+    fm:["Лекции и разборы кадров","Практика на площадке","Съёмка короткой сцены"]},
+  {id:"sound", n:"Звукорежиссура", y:1, b:1, st:"now", t:"У. Жапаров", cr:5, ab:"Запись, чистка, сведение. Звук как половина восприятия картинки.",
+    fm:["Практика в студии","Запись синхронных шумов","Сведение учебной сцены"]},
+  {id:"edit1", n:"Режиссура монтажа I", y:1, b:1, st:"now", t:"Б. Асанов", cr:3, ab:"Ритм, склейка, монтажная фраза. Первый год: разбор решений и монтаж учебного материала.",
+    fm:["Разбор монтажных решений","Монтаж учебного материала"]},
+  {id:"hcine1",n:"История кино и теория I", y:1, b:1, st:"next", t:"Н. Абдырахманова", cr:2, ab:"Кинематограф от Люмьеров до классического периода и авторского кино.",
+    fm:["Просмотры и обсуждения","Семинары"]},
+  {id:"vs2",   n:"Визуальный сторителлинг: режиссёрские методы", y:1, b:1, st:"next", t:"Р. Исаев", cr:5, ab:"От сценария к решению: раскадровка, мизансцена, режиссёрская экспликация.",
+    fm:["Семинары","Раскадровка своей сцены","Защита экспликации"]},
+  {id:"crew",  n:"Роли и технологии операторского департамента", y:1, b:1, st:"next", t:"Т. Ким", cr:3, ab:"Кто есть кто на площадке и как устроена техника съёмочной группы.",
+    fm:["Лекции","Работа в группе на площадке"]},
+
+  // 3 курс
+  {id:"edit2", n:"Режиссура монтажа II", y:2, b:1, st:"next", t:"Б. Асанов", cr:3, ab:"Второй год: курсовая сборка и монтаж материала собственного проекта.",
+    fm:["Курсовая сборка","Монтаж своего проекта"]},
+  {id:"hcine2",n:"История кино и теория II", y:2, b:1, st:"next", t:"Н. Абдырахманова", cr:2, ab:"Второй год: современный кинематограф и теория, письменный разбор фильма.",
+    fm:["Просмотры и обсуждения","Письменный разбор фильма"]},
+  {id:"prod",  n:"Продюсирование", y:2, b:1, st:"next", t:"А. Ниязова", cr:5, ab:"Бюджет, смета, календарь, команда. Как проект доходит до финала.",
+    fm:["Лекции","Смета собственного проекта","Питч перед комиссией"]},
+  {id:"sdes",  n:"Саунд-дизайн", y:2, b:1, st:"next", t:"У. Жапаров", cr:5, ab:"Создание звукового мира: атмосферы, эффекты, пространственный звук.",
+    fm:["Студийная практика","Озвучание сцены целиком"]},
+  {id:"pwork", n:"Продакшн Воркшоп", y:2, b:1, st:"next", t:"Б. Асанов", cr:8, ab:"Съёмочный период курсового проекта — полноценная работа в группе.",
+    fm:["Проект в команде","Съёмочные смены","Защита материала"]},
+  {id:"dist",  n:"Дистрибуция", y:2, b:1, st:"next", t:"А. Ниязова", cr:3, ab:"Фестивали, платформы, права. Что происходит с фильмом после финального рендера.",
+    fm:["Лекции","Фестивальная стратегия проекта"]},
+  {id:"vfx",   n:"Постпродакшн Воркшоп (VFX)", y:2, b:1, st:"next", t:"Э. Садыков", cr:8, ab:"Композитинг, симуляции, чистка кадра, финальная сборка.",
+    warn:"Пять входящих связей — больше нормы в 3–4. Узел интегрирующий, но связи «Основа анимации → VFX» и «Математика → VFX» стоит вынести на рабочую сессию: возможно, одна из них избыточна.",
+    fm:["Практика в софте","VFX своего проекта"]},
+  {id:"color", n:"Цветокоррекция и композитинг", y:2, b:1, st:"next", t:"Г. Мамытова", cr:5, ab:"Цветовые модели, кривые, look проекта. Живопись, доведённая до пикселя.",
+    fm:["Практика","Грейд курсового проекта"]},
+
+  // диплом
+  {id:"dip",   n:"Дипломная работа", y:3, b:1, st:"next", dip:1, t:"Руководитель по выбору", cr:12, ab:"Самостоятельный фильм: от замысла до финальной копии и защиты.",
+    warn:"Семь входящих связей — сознательное исключение из правила 3–4: диплом собирает все линии третьего курса. Дробить не имеет смысла.",
+    fm:["Индивидуальная работа","Консультации руководителя","Публичная защита"]}
+];
+
+/* ---------- связи между дисциплинами ----------
+   Формат: [источник, приёмник, тип, формулировка, маркеры]
+   Тип: req — пререквизит (жёсткая), sup — опора (восполнимая)
+   Маркеры: err — типовой ошибки · tool — инструмента · rep — повторения на занятии
+            lang — языка (термины) · ord — порядка в учебном плане
+   Правило: связь есть, если без A креатор не освоит B на приемлемом уровне.
+   Достаточно двух маркеров. Транзитивные дубли исключены. */
+const ED = [
+  // ===== из общеобразовательного цикла в профессиональный (25 связей) =====
+  ["eng","digi","sup","В Цифровом рисунке требуется чтение англоязычного интерфейса редактора и терминология слоёв и кистей из Английского языка.","lang tool"],
+  ["his","hart","sup","В Истории изобразительных искусств требуется хронология эпох и умение соотнести произведение с периодом из Истории.","lang ord"],
+  ["chm","paint","sup","В Живописи требуется представление о составе пигментов, связующих и их совместимости из Химии.","tool err"],
+  ["chm","photo0","sup","Во Введении в фотографию требуется понимание светочувствительности материалов — от плёночной эмульсии до сенсора — из Химии.","lang rep"],
+  ["phy","anim","sup","В Основе анимации требуется понимание инерции, ускорения и веса тела из Физики.","lang err"],
+  ["mat","anim","sup","В Основе анимации требуется работа с числовыми интервалами и графиками скорости — тайминг и спейсинг — из Математики.","tool err"],
+  ["phy","photo0","sup","Во Введении в фотографию требуется понимание фокусного расстояния, преломления и яркости света из Физики.","lang err"],
+  ["mat","photo0","sup","Во Введении в фотографию требуется работа со степенным рядом диафрагм и дробными выдержками из Математики.","tool err lang"],
+  ["kyr","speech","sup","В Речи и пластике требуется норма произношения, интонирование и дыхание во фразе из Кыргызского языка.","rep err"],
+  ["kyr","vs1","sup","В Основах повествования требуется письменная связность и работа с текстом из Кыргызского языка.","tool err"],
+  ["mat","smm","sup","В SMM требуется работа с процентами, долями и относительными показателями охвата из Математики.","tool err lang"],
+  ["eng","smm","sup","В SMM требуется чтение интерфейсов и метрик площадок на английском из Английского языка.","lang tool"],
+  ["phy","cam","sup","В Операторском искусстве требуется оптика: фокусное расстояние, светосила и глубина резкости из Физики.","lang err tool"],
+  ["mat","cam","sup","В Операторском искусстве требуется расчёт соотношений сторон, разрешения и частоты кадров из Математики.","tool err"],
+  ["phy","sound","sup","В Звукорежиссуре требуется понимание частоты, амплитуды и распространения волны из Физики.","lang tool"],
+  ["mat","sound","sup","В Звукорежиссуре требуется логарифмическая шкала децибел и работа с уровнями из Математики.","lang err"],
+  ["mat","edit1","sup","В Режиссуре монтажа I требуется перевод кадров, секунд и таймкода при разной частоте кадров из Математики.","tool err"],
+  ["mat","crew","sup","В Ролях и технологиях требуется расчёт сметы аренды техники на смену — проценты и рассрочка — из Математики.","tool rep"],
+  ["mat","prod","req","В Продюсировании требуется расчёт сметы: проценты, сложный процент и оптимизация ограниченного бюджета из Математики.","tool err rep"],
+  ["geo","prod","sup","В Продюсировании требуется оценка локаций, климата и логистики при построении календаря и сметы из Географии.","tool err"],
+  ["eng","dist","sup","В Дистрибуции требуется чтение фестивальных регламентов и подача заявок на английском из Английского языка.","lang tool err"],
+  ["geo","dist","sup","В Дистрибуции требуется представление о карте фестивалей и территориальных правах из Географии.","lang rep"],
+  ["mat","vfx","sup","В VFX требуется работа с координатами, векторами и допуском точности из Математики.","lang tool err"],
+  ["phy","vfx","sup","В VFX требуется понимание гравитации, столкновений и скорости для симуляций из Физики.","lang err"],
+  ["mat","color","sup","В Цветокоррекции требуется чтение гистограммы, кривых и числовых диапазонов из Математики.","tool lang"],
+
+  // ===== внутри профессионального цикла (44 связи) =====
+  ["draw","digi","req","В Цифровом рисунке требуется конструктивное построение и передача объёма из Рисунка.","err rep ord"],
+  ["draw","paint","req","В Живописи требуется постановка руки и тональное построение формы из Рисунка.","rep err ord"],
+  ["draw","anim","req","В Основе анимации требуется умение построить фигуру в движении и удержать пропорции из Рисунка.","err rep ord"],
+  ["draw","vs2","sup","В Режиссёрских методах требуется быстрая зарисовка раскадровки от руки из Рисунка.","tool rep"],
+  ["hart","hfash","req","В Истории моды и дизайна требуется периодизация стилей и язык анализа формы из Истории изобразительных искусств.","lang ord rep"],
+  ["hart","hcine1","sup","В Истории кино I требуется навык стилевого анализа изображения из Истории изобразительных искусств.","lang rep"],
+  ["hfash","hcine1","sup","В Истории кино I требуется чтение костюма и предметной среды эпохи из Истории моды и дизайна.","lang rep"],
+  ["think","vs1","req","В Основах повествования требуется умение порождать, отбирать и защищать замысел из Мастерства мышления.","rep ord lang"],
+  ["speech","act","req","В Актёрском мастерстве требуется поставленное дыхание, голос и владение телом из Речи и пластики.","rep err ord"],
+  ["speech","sound","sup","В Звукорежиссуре требуется слышать дикцию и темпоритм речи при записи из Речи и пластики.","err rep"],
+  ["photo0","photo","req","В Фотографии требуется уверенное владение экспопарой и камерой из Введения в фотографию.","tool rep ord"],
+  ["paint","photo","sup","В Фотографии требуется чувство тона и цветового строя кадра из Живописи.","lang err"],
+  ["paint","color","req","В Цветокоррекции требуется владение тоном, колоритом и цветовыми отношениями из Живописи.","lang err rep"],
+  ["digi","vfx","req","В VFX требуется работа со слоями, масками и разрешением в графическом редакторе из Цифрового рисунка.","tool rep ord"],
+  ["digi","color","sup","В композитинге требуется работа со слоями, масками и альфа-каналом из Цифрового рисунка.","tool lang"],
+  ["anim","edit1","sup","В Режиссуре монтажа I требуется чувство тайминга и спейсинга из Основы анимации.","lang err"],
+  ["anim","vfx","sup","В VFX требуется понимание принципов движения и веса при симуляции и вставке объекта из Основы анимации.","err lang"],
+  ["photo","cam","req","В Операторском искусстве требуется построение композиции кадра и работа со светом из Фотографии.","rep err ord"],
+  ["cam","crew","req","В Ролях и технологиях требуется практическое знакомство с камерой, оптикой и светом из Операторского искусства.","tool rep ord"],
+  ["cam","pwork","req","В Продакшн Воркшопе требуется самостоятельная работа с камерой и световой схемой на смене из Операторского искусства.","tool rep ord"],
+  ["cam","color","req","В Цветокоррекции требуется понимать, как снят исходник: экспозиция, профиль, запас в тенях — из Операторского искусства.","err lang ord"],
+  ["intro","crew","sup","В Ролях и технологиях требуется общая карта профессий и этапов производства из Введения в профессию.","lang ord"],
+  ["intro","prod","sup","В Продюсировании требуется знание ролей, департаментов и этапов производства из Введения в профессию.","lang ord"],
+  ["vs1","vs2","req","В Режиссёрских методах требуется владение структурой истории и аркой героя из Основ повествования.","lang rep ord"],
+  ["vs1","edit1","req","В Режиссуре монтажа I требуется понимание драматургии сцены и её событий из Основ повествования.","lang err ord"],
+  ["act","vs2","sup","В Режиссёрских методах требуется понимание актёрской задачи и действия при построении мизансцены из Актёрского мастерства.","lang rep"],
+  ["act","pwork","sup","В Продакшн Воркшопе требуется умение поставить актёру задачу на площадке из Актёрского мастерства.","rep err"],
+  ["hcine1","vs2","sup","В Режиссёрских методах требуется насмотренность и разбор чужих режиссёрских решений из Истории кино I.","rep lang"],
+  ["hcine1","hcine2","req","В Истории кино II требуется знание раннего и классического периодов и аппарат разбора из Истории кино I.","lang ord rep"],
+  ["edit1","edit2","req","В Режиссуре монтажа II требуется освоенная монтажная фраза и практика сборки из Режиссуры монтажа I.","rep ord tool"],
+  ["smm","prod","sup","В Продюсировании требуется понимание аудитории и каналов продвижения из SMM.","lang tool"],
+  ["smm","dist","req","В Дистрибуции требуется позиционирование проекта и работа с площадками из SMM.","tool rep ord"],
+  ["sound","sdes","req","В Саунд-дизайне требуется владение записью, чисткой и сведением из Звукорежиссуры.","tool rep ord"],
+  ["edit2","vfx","req","В VFX требуется собранный монтаж и понимание монтажной фразы из Режиссуры монтажа II.","ord rep tool"],
+  ["vs2","pwork","req","В Продакшн Воркшопе требуется готовая режиссёрская экспликация и раскадровка из Режиссёрских методов.","tool ord rep"],
+  ["crew","pwork","req","В Продакшн Воркшопе требуется распределение ролей и работа с техникой группы из Ролей и технологий операторского департамента.","rep ord tool"],
+  ["prod","dist","sup","В Дистрибуции требуется понимание прав, договоров и бюджета проекта из Продюсирования.","lang ord"],
+  ["prod","dip","req","В Дипломной работе требуется собственная смета, календарь и управление командой из Продюсирования.","tool ord"],
+  ["sdes","dip","req","В Дипломной работе требуется завершённая звуковая партитура фильма из Саунд-дизайна.","tool ord"],
+  ["pwork","dip","req","В Дипломной работе требуется опыт полного съёмочного периода в группе из Продакшн Воркшопа.","rep ord"],
+  ["dist","dip","req","В Дипломной работе требуется фестивальная стратегия и подготовка мастер-копии из Дистрибуции.","tool ord"],
+  ["vfx","dip","req","В Дипломной работе требуется финальная сборка и чистка кадра из Постпродакшн Воркшопа.","tool ord"],
+  ["color","dip","req","В Дипломной работе требуется грейд и единый look картины из Цветокоррекции.","tool ord"],
+  ["hcine2","dip","sup","В Дипломной работе требуется умение поместить свой замысел в контекст киноязыка и традиции из Истории кино II.","lang rep"]
+];
+
+/* ============================================================
+   РАЗМЕТКА И ОТРИСОВКА
+   ============================================================ */
+
+const TY_LABEL = { req: "Пререквизит", sup: "Опора" };
+const MK_LABEL = {
+  err: "типовая ошибка", tool: "инструмент", rep: "повторение на занятии",
+  lang: "язык, термины", ord: "порядок в плане"
+};
+const COLS = ["1 курс","2 курс","3 курс","Диплом"];
+const L = { colW:206, gap:56, laneGap:14, nodeH:52, vgap:8, padX:34, padTop:66, bandGap:56 };
+
+// полоса 0 — профессиональный цикл (сверху), полоса 1 — общеобразовательный (снизу)
+const bandOf = n => (n.b === 1 ? 0 : 1);
+const BAND_LABEL = ["Профессиональный цикл", "Общеобразовательный цикл"];
+
+let filterT = "all";
+let view = "creator";          // "creator" — вид креатора, "teacher" — вид преподавателя
+const TEACHER_OWN = "mat";     // дисциплина преподавателя в демонстрации
+let nodes = [], edges = [], byId = {};
+let selected = null, hovered = null;
+
+const canvas = document.getElementById("canvas");
+const svg = document.getElementById("edges");
+const side = document.getElementById("side");
+
+function layout() {
+  nodes = D.map(o => Object.assign({}, o));
+  byId = {};
+  nodes.forEach(n => byId[n.id] = n);
+
+  const colCount = 4;
+  const colX = [];
+  let x = L.padX;
+  for (let c = 0; c < colCount; c++) {
+    colX.push(x);
+    x += (c === 0 ? L.colW * 2 + L.laneGap : L.colW) + L.gap;
+  }
+  const totalW = x - L.gap + L.padX;
+
+  const groups = {};
+  nodes.forEach(n => {
+    const key = n.y + "|" + bandOf(n);
+    (groups[key] = groups[key] || []).push(n);
+  });
+
+  const step = L.nodeH + L.vgap;
+
+  // высота верхней полосы — самая длинная колонка профессионального цикла
+  let band0Rows = 0;
+  for (let c = 0; c < colCount; c++) {
+    const g = groups[c + "|0"] || [];
+    band0Rows = Math.max(band0Rows, c === 0 ? Math.ceil(g.length / 2) : g.length);
+  }
+  const band0H = band0Rows ? band0Rows * step + L.bandGap : 0;
+
+  let maxY = 0;
+  Object.keys(groups).forEach(key => {
+    const [c, band] = key.split("|").map(Number);
+    const arr = groups[key];
+    const baseY = L.padTop + (band === 1 ? band0H : 0);
+    const split = c === 0 ? Math.ceil(arr.length / 2) : arr.length;
+    arr.forEach((n, i) => {
+      const lane = i < split ? 0 : 1;
+      const row = lane ? i - split : i;
+      n.x = colX[c] + lane * (L.colW + L.laneGap);
+      n.y_ = baseY + row * step;
+      n.w = L.colW;
+      n.h = L.nodeH;
+      maxY = Math.max(maxY, n.y_ + L.nodeH);
+    });
+  });
+
+  edges = ED
+    .filter(e => byId[e[0]] && byId[e[1]])
+    .map(e => ({ a: e[0], b: e[1], ty: e[2], f: e[3], mk: e[4] }));
+
+  canvas.style.width = totalW + "px";
+  canvas.style.height = (maxY + 64) + "px";
+  return { colX, band0H, totalW };
+}
+
+function edgePath(s, t) {
+  const sameCol = Math.abs(s.x - t.x) < 4;
+  const sy = s.y_ + s.h / 2, ty = t.y_ + t.h / 2;
+  if (sameCol) {
+    const rx = s.x + s.w;
+    const bulge = 46;
+    return `M ${rx} ${sy} C ${rx + bulge} ${sy} ${rx + bulge} ${ty} ${rx} ${ty}`;
+  }
+  const sx = s.x + s.w, tx = t.x;
+  const dx = Math.max(46, (tx - sx) * 0.5);
+  return `M ${sx} ${sy} C ${sx + dx} ${sy} ${tx - dx} ${ty} ${tx} ${ty}`;
+}
+
+function render() {
+  const geo = layout();
+  canvas.querySelectorAll(".node, .colhead, .bandlabel").forEach(e => e.remove());
+  svg.innerHTML = "";
+  svg.setAttribute("width", geo.totalW);
+  svg.setAttribute("height", canvas.style.height.replace("px", ""));
+
+  edges.forEach(e => {
+    const p = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    p.setAttribute("d", edgePath(byId[e.a], byId[e.b]));
+    // пройденный путь — оба конца изучены (брендбук: фисташковая линия 2 px)
+    const passed = view === "creator" && byId[e.a].st === "done" && byId[e.b].st === "done";
+    p.setAttribute("class", "edge " + e.ty + (passed ? " passed" : ""));
+    svg.appendChild(p);
+    e.el = p;
+  });
+
+  COLS.forEach((label, i) => {
+    const h = document.createElement("div");
+    h.className = "colhead";
+    h.style.left = geo.colX[i] + "px";
+    h.style.top = "24px";
+    h.innerHTML = `<i>${String(i + 1).padStart(2, "0")}</i>${label}`;
+    canvas.appendChild(h);
+  });
+
+  const b1 = document.createElement("div");
+  b1.className = "bandlabel";
+  b1.style.left = L.padX + "px";
+  b1.style.top = (L.padTop - 28) + "px";
+  b1.textContent = BAND_LABEL[0];
+  canvas.appendChild(b1);
+
+  const b2 = document.createElement("div");
+  b2.className = "bandlabel";
+  b2.style.left = L.padX + "px";
+  b2.style.top = (L.padTop + geo.band0H - 32) + "px";
+  b2.textContent = BAND_LABEL[1];
+  canvas.appendChild(b2);
+
+  nodes.forEach(n => {
+    const el = document.createElement("button");
+    const teacher = view === "teacher";
+    el.className = "node " + (teacher ? "plain" + (n.id === TEACHER_OWN ? " own" : "") : n.st) + (n.dip ? " diploma" : "");
+    el.style.cssText = `left:${n.x}px; top:${n.y_}px; width:${n.w}px; height:${n.h}px;`;
+    el.dataset.id = n.id;
+
+    const badge = teacher
+      ? (n.id === TEACHER_OWN ? `<span class="tag">ваша</span>` : "")
+      : (n.st === "done" && n.sc ? `<span class="sc">${n.sc}</span>` :
+         n.st === "now" ? `<span class="sc">идёт</span>` : "");
+    const flag = n.warn ? `<span class="flag" title="Связи требуют обсуждения"></span>` : "";
+    el.innerHTML = `<span class="txt"><span class="nm">${n.n}</span></span>${badge}${flag}`;
+
+    el.addEventListener("mouseenter", () => { hovered = n.id; paint(); });
+    el.addEventListener("mouseleave", () => { hovered = null; paint(); });
+    el.addEventListener("focus", () => { hovered = n.id; paint(); });
+    el.addEventListener("blur", () => { hovered = null; paint(); });
+    el.addEventListener("click", () => { selected = n.id; paint(); panel(n.id); });
+    canvas.appendChild(el);
+    n.el = el;
+  });
+
+  paint();
+  panel(selected);
+}
+
+const visible = e => filterT === "all" || e.ty === filterT;
+
+function neighbours(id) {
+  const set = new Set([id]);
+  edges.forEach(e => {
+    if (!visible(e)) return;
+    if (e.a === id) set.add(e.b);
+    if (e.b === id) set.add(e.a);
+  });
+  return set;
+}
+
+function paint() {
+  const focus = hovered || selected;
+  canvas.classList.toggle("filtered", !!focus);
+  const set = focus ? neighbours(focus) : null;
+  nodes.forEach(n => {
+    n.el.classList.toggle("hot", set ? set.has(n.id) : false);
+    n.el.classList.toggle("sel", n.id === selected);
+  });
+  edges.forEach(e => {
+    const vis = visible(e);
+    e.el.classList.toggle("off", !vis);
+    e.el.classList.toggle("hot", vis && focus ? (e.a === focus || e.b === focus) : false);
+  });
+}
+
+/* ---------- боковая панель ---------- */
+
+const ST_LABEL = { done: "Пройдено", now: "В процессе", next: "Предстоит" };
+const markers = mk => mk.split(" ").filter(Boolean).map(m => MK_LABEL[m] || m).join(" · ");
+
+function relList(id, dir) {
+  const list = edges.filter(e => e[dir === "in" ? "b" : "a"] === id);
+  if (!list.length) return "";
+  const items = list.map(e => {
+    const other = dir === "in" ? e.a : e.b;
+    const n = byId[other];
+    return `<li><button data-go="${other}" title="Маркеры: ${markers(e.mk)}">
+        <span class="dot ${n.st}"></span>
+        <span class="rl"><span class="rn">${n.n}<em class="ty ${e.ty}">${TY_LABEL[e.ty]}</em></span><span class="rf">${e.f}</span></span>
+      </button></li>`;
+  }).join("");
+  return `<div><h4>${dir === "in" ? "Опирается на" : "Ведёт к"}<span>${list.length}</span></h4><ul class="rel">${items}</ul></div>`;
+}
+
+function panel(id) {
+  if (!id || !byId[id]) { emptyPanel(); return; }
+  const n = byId[id];
+  const teacher = view === "teacher";
+  const chips = [
+    teacher ? (n.id === TEACHER_OWN ? `<span class="chip done">Ваша дисциплина</span>` : "")
+            : `<span class="chip ${n.st}">${ST_LABEL[n.st]}</span>`,
+    `<span class="chip">${n.cr} кредита</span>`,
+    `<span class="chip">${["1 курс","2 курс","3 курс","Выпуск"][n.y]}</span>`
+  ].join("");
+
+  let body = "";
+  if (teacher) {
+    if (n.fm) {
+      body += `<div class="card">
+        <p class="eyebrow">Формы работы</p>
+        <ul class="fmt">${n.fm.map(f => `<li>${f}</li>`).join("")}</ul>
+      </div>`;
+    }
+  } else if (n.st === "done" && n.sc) {
+    body += `<div class="card">
+      <p class="eyebrow">Ваш результат</p>
+      <div class="score"><b>${n.sc}</b><span class="grade">${GRADE(n.sc)}</span></div>
+      <div class="meter"><i style="width:${n.sc}%"></i></div>
+      <p style="margin-top:9px;color:var(--muted)">${TRAD(n.sc)}</p>
+    </div>`;
+  } else if (n.st === "now") {
+    body += `<div class="card" style="border-color:var(--now)">
+      <p class="eyebrow" style="color:var(--now)">Идёт сейчас</p>
+      <p>Дисциплина в процессе. Итоговый балл появится после закрытия модуля.</p>
+    </div>`;
+  } else {
+    body += `<div class="card">
+      <p class="eyebrow">Что вас ждёт</p>
+      <ul class="fmt">${(n.fm || ["Уроки"]).map(f => `<li>${f}</li>`).join("")}</ul>
+    </div>`;
+  }
+
+  body += `<div><dl class="kv">
+    <dt>Преподаватель</dt><dd>${n.t}</dd>
+    <dt>Кредиты</dt><dd>${n.cr}</dd>
+    <dt>Цикл</dt><dd>${n.b === 0 ? "Общеобразовательный" : "Профессиональный"}</dd>
+  </dl></div>`;
+  body += `<p>${n.ab}</p>`;
+  body += `<a class="syl" href="#" onclick="return false">Открыть силлабус →</a>`;
+
+  const warn = n.warn ? `<div class="card warn">
+      <p class="eyebrow" style="color:var(--warn)">На рабочую сессию</p>
+      <p style="color:var(--ink-2)">${n.warn}</p>
+    </div>` : "";
+
+  side.innerHTML = `
+    <div>
+      <div class="head-row">
+        <div>
+          <p class="eyebrow">${teacher ? "Дисциплина · вид преподавателя" : "Дисциплина"}</p>
+          <h2 class="title">${n.n}</h2>
+        </div>
+        <button class="close" id="closeBtn">Esc</button>
+      </div>
+      <div class="chips">${chips}</div>
+    </div>
+    ${body}
+    ${relList(id, "in")}
+    ${relList(id, "out")}
+    ${warn}
+    ${DEMO_NOTE}
+  `;
+  wireSide();
+}
+
+function emptyPanel() {
+  const done = nodes.filter(n => n.st === "done").length;
+  const pct = Math.round(done / nodes.length * 100);
+  const c = { req: 0, sup: 0 };
+  ED.forEach(e => c[e[2]]++);
+
+  const own = ED.filter(e => e[0] === TEACHER_OWN).length;
+  const head = view === "teacher" ? `
+    <div>
+      <p class="eyebrow">Вид преподавателя</p>
+      <h2 class="title">А. Маркилов</h2>
+      <div class="chips">
+        <span class="chip">Математика</span>
+        <span class="chip">Общеобразовательный департамент</span>
+      </div>
+    </div>
+    <div class="card">
+      <p class="eyebrow">Ваша дисциплина в программе</p>
+      <div class="score"><b>${own}</b><span class="grade">связи вперёд</span></div>
+      <p style="margin-top:11px">Столько дисциплин опирается на математику — от основы анимации до сметы дипломного проекта. Нажмите на свою дисциплину, чтобы увидеть формулировку каждой связи.</p>
+    </div>
+    <div class="card">
+      <p class="eyebrow">Что вам видно</p>
+      <p>Весь граф программы, все связи с формулировками, карточки дисциплин и силлабусы.</p>
+      <p style="margin-top:8px"><b>Успеваемость креаторов в этом виде не отображается</b> — ни по группам, ни по отдельным людям. Граф не используется для оценки преподавателей.</p>
+    </div>
+    <div class="legend">
+      <h4>Обозначения</h4>
+      <div class="lg"><span class="sw done"></span> Ваша дисциплина</div>
+      <div class="lg"><span class="sw next"></span> Остальные дисциплины программы</div>
+    </div>` : `
+    <div>
+      <p class="eyebrow">Профиль</p>
+      <h2 class="title">Айдана К.</h2>
+      <div class="chips">
+        <span class="chip">2 курс</span>
+        <span class="chip">Визуальные медиа: Анимация</span>
+      </div>
+    </div>
+    <div class="card">
+      <p class="eyebrow">Прогресс по программе</p>
+      <div class="score"><b>${pct}<span style="font-size:18px">%</span></b><span class="grade">${done} из ${nodes.length}</span></div>
+      <div class="meter"><i style="width:${pct}%"></i></div>
+      <p style="margin-top:11px">Первый курс закрыт полностью. Идёт второй: три дисциплины в работе. Виден весь план на три года — вплоть до дипломной работы.</p>
+    </div>
+    <div class="legend">
+      <h4>Статус дисциплины</h4>
+      <div class="lg"><span class="sw done"></span> Пройдено — виден ваш балл</div>
+      <div class="lg"><span class="sw now"></span> В процессе — идёт сейчас</div>
+      <div class="lg"><span class="sw next"></span> Предстоит — виден силлабус</div>
+    </div>`;
+
+  side.innerHTML = `
+    ${head}
+    <div class="legend">
+      <h4>Тип связи</h4>
+      <div class="lg"><span class="ln req"></span> Пререквизит — жёсткая</div>
+      <div class="lg"><span class="ln sup"></span> Опора — восполнимая</div>
+      <div class="lg"><span class="ln passed"></span> Пройденный путь — обе дисциплины изучены</div>
+    </div>
+    <div>
+      <h4>Как построены связи</h4>
+      <p class="rule">Связь A → B существует, если без дисциплины A креатор <b>не сможет освоить</b> дисциплину B на приемлемом уровне. Не «полезно знать» и не «связано по смыслу».</p>
+      <dl class="method">
+        <dt>Пререквизит <span style="color:var(--muted);font-weight:400">— ${c.req}</span></dt>
+        <dd>Жёсткая связь. Пробел блокирует дисциплину.</dd>
+        <dt>Опора <span style="color:var(--muted);font-weight:400">— ${c.sup}</span></dt>
+        <dd>Восполнимая. Пробел закрывается на занятии, но стоит времени.</dd>
+      </dl>
+      <p style="margin-top:12px;color:var(--muted);font-size:11.5px">Каждая связь подтверждена минимум двумя маркерами из пяти (типовая ошибка · инструмент · повторение на занятии · язык · порядок в плане) и сформулирована одной фразой — её и подтверждает преподаватель. Наведите курсор на связь в карточке, чтобы увидеть маркеры.</p>
+    </div>
+    <div class="card warn">
+      <p class="eyebrow" style="color:var(--warn)">Два узла вне нормы</p>
+      <p style="color:var(--ink-2)">Правило «не более 3–4 входящих связей» нарушено у Постпродакшн Воркшопа (5) и Дипломной работы (7) — они помечены угловой меткой. Первый случай спорный, второй — сознательное исключение.</p>
+    </div>
+    <p class="hint">Наведите курсор на дисциплину, чтобы увидеть её связи. Нажмите — откроется карточка. Переключатель <b>Креатор / Преподаватель</b> показывает, что видит каждая из двух ролей.</p>
+    ${DEMO_NOTE}
+  `;
+  wireSide();
+}
+
+const DEMO_NOTE = `<div class="demo">
+  <b>Демонстрационный прототип, версия от 14 сентября 2026.</b> Реальные данные: структура программы
+  «Визуальные медиа: Анимация» за три года и шкала оценок колледжа. Условные данные: профиль креатора,
+  баллы и преподаватели. <b>Связи</b> построены по критериям пилота, но <b>ни одна пока не подтверждена
+  преподавателями</b> — это рабочая гипотеза, которую преподаватели разбирают в анкете на этапе 2. Две роли: креатор видит свою успеваемость,
+  преподаватель — только граф и связи. Доступ открывается 18 января 2027.
+</div>`;
+
+function wireSide() {
+  const cb = document.getElementById("closeBtn");
+  if (cb) cb.addEventListener("click", () => { selected = null; paint(); panel(null); });
+  side.querySelectorAll("[data-go]").forEach(b => {
+    b.addEventListener("click", () => {
+      selected = b.dataset.go;
+      paint();
+      panel(selected);
+      const n = byId[selected];
+      if (n && n.el) n.el.scrollIntoView({ block: "center", inline: "center", behavior: "smooth" });
+    });
+  });
+}
+
+/* ---------- фильтр и статистика ---------- */
+
+document.querySelectorAll(".tf").forEach(b => {
+  b.addEventListener("click", () => {
+    filterT = b.dataset.t;
+    document.querySelectorAll(".tf").forEach(x => x.setAttribute("aria-pressed", x.dataset.t === filterT));
+    paint();
+  });
+});
+
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape") { selected = null; hovered = null; paint(); panel(null); }
+});
+
+const vC = document.getElementById("vCreator"), vT = document.getElementById("vTeacher");
+function setView(v) {
+  if (view === v) return;
+  view = v;
+  selected = null; hovered = null;
+  vC.setAttribute("aria-pressed", v === "creator");
+  vT.setAttribute("aria-pressed", v === "teacher");
+  document.getElementById("statsCreator").hidden = v !== "creator";
+  document.getElementById("statsTeacher").hidden = v !== "teacher";
+  render();
+}
+vC.addEventListener("click", () => setView("creator"));
+vT.addEventListener("click", () => setView("teacher"));
+
+(function stats() {
+  const doneList = D.filter(d => d.st === "done" && d.sc);
+  const avg = Math.round(doneList.reduce((s, d) => s + d.sc, 0) / doneList.length);
+  document.getElementById("sDone").textContent = doneList.length + "/" + D.length;
+  document.getElementById("sNow").textContent = D.filter(d => d.st === "now").length;
+  document.getElementById("sAvg").textContent = avg;
+  document.getElementById("tDisc").textContent = D.length;
+  document.getElementById("tEdges").textContent = ED.length;
+  document.getElementById("tOwn").textContent = ED.filter(e => e[0] === TEACHER_OWN).length;
+
+  const c = { req: 0, sup: 0 };
+  ED.forEach(e => c[e[2]]++);
+  document.getElementById("cAll").textContent = ED.length;
+  document.getElementById("cReq").textContent = c.req;
+  document.getElementById("cSup").textContent = c.sup;
+
+  const byIdD = Object.fromEntries(D.map(d => [d.id, d]));
+  const cross = ED.filter(e => byIdD[e[0]].b === 0 && byIdD[e[1]].b === 1).length;
+  document.getElementById("subnote").innerHTML =
+    `<b>${cross}</b> из ${ED.length} связей ведут из общеобразовательного цикла в профессиональный`;
+})();
+
+render();
+</script>
+
+</body>
+</html>
